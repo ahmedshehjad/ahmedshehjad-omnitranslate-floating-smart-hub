@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+    <!-- Telegram Blue Circle Background -->
+    <path
+        android:fillColor="#26A5E4"
+        android:pathData="M36,0A36,36 0 1,0 36,72A36,36 0 1,0 36,0Z" />
+    <!-- White Paper Plane -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M16.5,35.1l36,-14.7c1.7,-0.6 3.1,0.4 2.6,2.7l-6.1,28.8c-0.5,2.1 -1.7,2.6 -3.5,1.6l-9.4,-6.9 -4.5,4.3c-0.5,0.5 -0.9,0.9 -1.9,0.9l0.7,-9.5 17.3,-15.6c0.8,-0.7 -0.2,-1.1 -1.2,-0.4L18.7,39.3l-9.2,-2.9C7.5,35.8 7.5,34.4 9.6,33.6l6.9,1.5z" />
+</vector>

@@ -1,0 +1,6 @@
+{
+  "name": "OmniTranslate",
+  "description": "Floating smart hub with real-time screen bubble, offline ML Kit translator, and universal clipboard manager.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
