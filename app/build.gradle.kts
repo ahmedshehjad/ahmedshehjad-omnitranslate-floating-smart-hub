@@ -1,6 +1,5 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
 
-val localDebugKeystore = rootDir.resolve("debug.keystore")
 
 plugins {
   alias(libs.plugins.android.application)
@@ -9,6 +8,8 @@ plugins {
   alias(libs.plugins.secrets)
   alias(libs.plugins.google.services)
 }
+
+val localDebugKeystore = rootDir.resolve("debug.keystore")
 
 android {
   namespace = "com.example"
