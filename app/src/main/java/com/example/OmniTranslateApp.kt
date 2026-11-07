@@ -14,10 +14,9 @@ class OmniTranslateApp : Application() {
 
         // Configure test device IDs (Emulator + Logcat Device ID)
         try {
-            val testDeviceIds = listOf(
-                AdRequest.DEVICE_ID_EMULATOR,
-                "46043d5e-bd7b-421e-9b16-9e6be6f28d7a"
-            )
+            // Only the official emulator test ID is configured here.
+            // Add a physical device only after obtaining its AdMob test-device ID from Logcat.
+            val testDeviceIds = listOf(AdRequest.DEVICE_ID_EMULATOR)
             val configuration = RequestConfiguration.Builder()
                 .setTestDeviceIds(testDeviceIds)
                 .build()
