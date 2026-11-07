@@ -2,7 +2,7 @@ name: Android CI and Release Audit
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, ci/release-build-and-signing-audit ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
