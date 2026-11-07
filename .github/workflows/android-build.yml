@@ -8,10 +8,6 @@ on:
 permissions:
   contents: read
 
-concurrency:
-  group: android-ci-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   test-and-debug:
     timeout-minutes: 45
