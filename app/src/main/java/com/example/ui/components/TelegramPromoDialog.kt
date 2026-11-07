@@ -118,7 +118,7 @@ fun TelegramPromoDialog(
             ) {
                 // Centered promo message
                 Text(
-                    text = "নতুন ফিচার, ফ্রি টিপস ও ট্রিকস এবং এই অ্যাপের সর্বশেষ আপডেট! পেতে যুক্ত থাকুন আমাদের অফিশিয়াল টেলিগ্রাম চ্যানেলে।",
+                    text = "Stay connected to our official Telegram channel to get the latest features, free tips and tricks, and updates about this app!",
                     fontSize = 14.sp,
                     lineHeight = 22.sp,
                     textAlign = TextAlign.Center,

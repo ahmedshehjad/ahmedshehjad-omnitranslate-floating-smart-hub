@@ -274,7 +274,7 @@ class OmniViewModel(application: Application) : AndroidViewModel(application) {
     fun setOcrBitmap(bitmap: Bitmap) {
         _isOcrProcessing.value = true
         viewModelScope.launch {
-            val result = OcrEngine.recognizeTextFromBitmap(bitmap)
+            val result = OcrEngine.recognizeTextFromBitmap(getApplication(), bitmap)
             _isOcrProcessing.value = false
             result.onSuccess { text ->
                 _ocrExtractedText.value = text
