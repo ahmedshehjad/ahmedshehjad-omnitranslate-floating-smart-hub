@@ -23,7 +23,7 @@ object OcrEngine {
     private const val TAG = "OcrEngine"
     private const val BENGALI_MODEL_URL =
         "https://raw.githubusercontent.com/tesseract-ocr/tessdata_fast/main/ben.traineddata"
-    private const val MIN_MODEL_BYTES = 1_000_000L
+    private const val MIN_MODEL_BYTES = 500_000L
 
     @Volatile
     private var recognizer: TextRecognizer? = null
