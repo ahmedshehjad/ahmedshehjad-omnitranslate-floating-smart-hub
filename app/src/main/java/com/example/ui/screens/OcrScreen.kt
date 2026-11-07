@@ -146,6 +146,13 @@ fun OcrScreen(
                     modifier = Modifier.padding(horizontal = 8.dp)
                 )
 
+                Text(
+                    text = "Bengali OCR downloads its model once on first use and saves it on your device.",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = 6.dp, horizontal = 8.dp)
+                )
+
                 Spacer(modifier = Modifier.height(18.dp))
 
                 Row(
