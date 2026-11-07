@@ -53,17 +53,17 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-      - name: Build signed Release APK and AAB when production key is configured
+      - name: Build and verify original-key Release APK and AAB
         id: release
         env:
-          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
-          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 || secrets.OMNITRANSLATE_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.STORE_PASSWORD || secrets.OMNITRANSLATE_STORE_PASSWORD }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD || secrets.OMNITRANSLATE_KEY_PASSWORD }}
         shell: bash
         run: |
           set -euo pipefail
           if [[ -z "${KEYSTORE_BASE64}" || -z "${STORE_PASSWORD}" || -z "${KEY_PASSWORD}" ]]; then
-            echo "::warning::Production signing secrets are not configured. Release build was safely skipped; no replacement key will be generated."
+            echo "::warning::Production signing secrets are missing. Release was NOT built; no replacement key was generated."
             echo "release_built=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -72,14 +72,44 @@ jobs:
           printf '%s' "$KEYSTORE_BASE64" | base64 --decode > "$KEYSTORE_PATH"
           test -s "$KEYSTORE_PATH"
           export KEYSTORE_PATH
+
+          # Refuse to sign with any key other than the original production certificate.
+          EXPECTED_SHA256="FF8E7A9969013DAADE3BF49D0EA500B0EF652F312AAA9248C255943ECC438323"
+          ACTUAL_SHA256="$(keytool -exportcert -rfc -keystore "$KEYSTORE_PATH" -storepass "$STORE_PASSWORD" -alias upload | openssl x509 -noout -fingerprint -sha256 | cut -d= -f2 | tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          if [[ "$ACTUAL_SHA256" != "$EXPECTED_SHA256" ]]; then
+            echo "::error::Production keystore certificate fingerprint mismatch. Release signing stopped."
+            exit 1
+          fi
+
           gradle assembleRelease bundleRelease --stacktrace
+
+          APK="$(find app/build/outputs/apk/release -maxdepth 1 -type f -name '*.apk' -print -quit)"
+          AAB="$(find app/build/outputs/bundle/release -maxdepth 1 -type f -name '*.aab' -print -quit)"
+          test -n "$APK" && test -s "$APK"
+          test -n "$AAB" && test -s "$AAB"
+
+          SDK_ROOT="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          test -n "$SDK_ROOT"
+          APKSIGNER="$(find "$SDK_ROOT/build-tools" -type f -name apksigner | sort -V | tail -n1)"
+          test -x "$APKSIGNER"
+
+          APK_SHA256="$("$APKSIGNER" verify --verbose --print-certs "$APK" | sed -n 's/.*certificate SHA-256 digest: //p' | head -n1 | tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          AAB_SHA256="$(keytool -printcert -jarfile "$AAB" | sed -n 's/^[[:space:]]*SHA256:[[:space:]]*//p' | head -n1 | tr -d ':' | tr '[:lower:]' '[:upper:]')"
+          jarsigner -verify "$AAB" >/dev/null
+
+          if [[ "$APK_SHA256" != "$EXPECTED_SHA256" || "$AAB_SHA256" != "$EXPECTED_SHA256" ]]; then
+            echo "::error::Built APK/AAB signing certificate does not match the original production certificate."
+            exit 1
+          fi
+
+          echo "Original production certificate verified for keystore, APK, and AAB: $ACTUAL_SHA256"
           echo "release_built=true" >> "$GITHUB_OUTPUT"
 
-      - name: Upload signed Release APK and AAB
+      - name: Upload verified signed Release APK and AAB
         if: steps.release.outputs.release_built == 'true'
         uses: actions/upload-artifact@v4
         with:
-          name: OmniTranslate-signed-release
+          name: OmniTranslate-original-key-release
           path: |
             app/build/outputs/apk/release/*.apk
             app/build/outputs/bundle/release/*.aab
