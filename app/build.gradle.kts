@@ -16,7 +16,7 @@ android {
   compileSdk { version = release(36) { minorApiLevel = 1 } }
 
   defaultConfig {
-    applicationId = "com.aistudio.omnitranslate.qkvzpt"
+    applicationId = "com.aistudio.omnitranslate.whktbf"
     minSdk = 24
     targetSdk = 36
     versionCode = 1
