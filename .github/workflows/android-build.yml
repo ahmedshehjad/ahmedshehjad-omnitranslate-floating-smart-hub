@@ -1,8 +1,6 @@
 name: Android CI and Release Audit
 
 on:
-  push:
-    branches: [ main, ci/release-build-and-signing-audit ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
@@ -16,6 +14,7 @@ concurrency:
 
 jobs:
   test-and-debug:
+    timeout-minutes: 45
     name: Unit tests and Debug APK
     runs-on: ubuntu-latest
     steps:
